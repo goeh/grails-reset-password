@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<!DOCTYPE html>
+<g:applyLayout name="${layout}">
 <html>
 <head>
-    <meta name="layout" content="email"/>
     <title><g:message code="security.question.email.title" default="Reset Password Security Code"/></title>
 </head>
 
@@ -18,3 +17,4 @@
 
 </body>
 </html>
+</g:applyLayout>
