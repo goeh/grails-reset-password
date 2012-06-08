@@ -7,7 +7,7 @@
 
 <body style="margin:0;">
 <table width="100%;" cellpadding="0" cellspacing="0" rowspacing="0" border="0"
-       style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: #cccccc;">
+       style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; background-color: #eeeeee;">
     <tbody>
     <tr>
         <td>

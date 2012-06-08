@@ -41,8 +41,40 @@ class ResetPasswordServiceSpec extends grails.plugin.spock.IntegrationSpec {
         then:
         !resetPasswordService.isCorrect(username, "security.question.birth.city", "Paris")
         resetPasswordService.isCorrect(username, "security.question.birth.city", "New York")
+        resetPasswordService.isCorrect(username, "security.question.birth.city", "NewYork") // Case+Space insensitve
+        resetPasswordService.isCorrect(username, "security.question.birth.city", "NEW    YORK")
         resetPasswordService.isCorrect(username, "security.question.family.wedding.honeymoon.city", "Venice")
+        !resetPasswordService.isCorrect(username, "security.question.family.wedding.honeymoon.city", "Venise")
         resetPasswordService.isCorrect(username, "security.question.family.child.oldest.name.middle", "Adam")
+        resetPasswordService.isCorrect(username, "security.question.family.child.oldest.name.middle", "Adam ")
+        resetPasswordService.isCorrect(username, "security.question.family.child.oldest.name.middle", " Adam")
+        !resetPasswordService.isCorrect(username, "security.question.family.child.oldest.name.middle", "Sadam")
+    }
+
+    def "set answers from a map"() {
+        given:
+        def username = "joe"
+        def map = ['security.question.birth.city': "London",
+                'security.question.family.wedding.honeymoon.city': "Paris",
+                'security.question.family.child.oldest.name.middle': "Marie"
+        ]
+
+        when:
+        resetPasswordService.setAnswers(username, map)
+
+        then:
+        resetPasswordService.getQuestionsForUser(username).size() == 3
+        resetPasswordService.isCorrect(username, "security.question.birth.city", "London")
+        resetPasswordService.isCorrect(username, "security.question.family.wedding.honeymoon.city", "Paris")
+        resetPasswordService.isCorrect(username, "security.question.family.child.oldest.name.middle", "Marie")
+
+        when:
+        resetPasswordService.setAnswers(username, ['security.question.birth.city': "Stockholm"])
+
+        then:
+        resetPasswordService.getQuestionsForUser(username).size() == 1
+        !resetPasswordService.isCorrect(username, "security.question.birth.city", "London")
+        resetPasswordService.isCorrect(username, "security.question.birth.city", "Stockholm")
     }
 
     def "empty answer"() {

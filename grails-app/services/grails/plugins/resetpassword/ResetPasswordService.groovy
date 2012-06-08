@@ -43,9 +43,20 @@ class ResetPasswordService {
     }
 
     /**
+     * Set all security answers for a user.
+     * Any existing answers will be replaced.
+     * @param username the user to set answers for
+     * @param answers a Map with answers keyed by question i18n key
+     */
+    void setAnswers(String username, Map answers) {
+        removeAllAnswers(username)
+        answers.each{q, a->
+            addAnswer(username, q, a)
+        }
+    }
+
+    /**
      * Store answer to a question.
-     * Note: Clients should lowercase and trim answers before calling addAnswer/isCorrect
-     * since these methods are case sensitive.
      *
      * @param username the user key (username or email).
      * @param questionKey i18n key for the question
@@ -55,6 +66,8 @@ class ResetPasswordService {
         if (!username) {
             throw new IllegalArgumentException("empty username is not allowed")
         }
+        // Remove all white space and lowercase answer.
+        answer = answer?.replaceAll(/\s*/, '')?.toLowerCase()
         if (!answer) {
             throw new IllegalArgumentException("empty answer is not allowed")
         }
@@ -88,8 +101,7 @@ class ResetPasswordService {
 
     /**
      * Compare if supplied answer is the same as stored answer for a question.
-     * Note: Clients should lowercase and trim answers before calling addAnswer/isCorrect
-     * since these methods are case sensitive.
+     * Note: White space and case are ignored when verifying the answer.
      *
      * @param username the user key (username or email).
      * @param questionKey i18n key for the question
@@ -100,6 +112,7 @@ class ResetPasswordService {
         if (!username) {
             throw new IllegalArgumentException("empty username is not allowed")
         }
+        answer = answer?.replaceAll(/\s*/, '')?.toLowerCase()
         if (!answer) {
             throw new IllegalArgumentException("empty answer is not allowed")
         }

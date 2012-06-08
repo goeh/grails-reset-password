@@ -22,7 +22,7 @@
         </label>
 
         <div class="controls">
-            <g:passwordField name="password1"
+            <g:passwordField name="password1" autofocus=""
                              placeholder="${message(code:'resetPassword.password1.placeholder', default:'')}"/>
         </div>
     </div>

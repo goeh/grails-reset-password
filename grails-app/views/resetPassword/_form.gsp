@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" defaultCodec="html" %>
 
+<g:set var="focus" value="${true}"/>
+
 <g:if test="${fields.contains('username')}">
     <div class="control-group">
         <label class="control-label">
@@ -7,10 +9,11 @@
         </label>
 
         <div class="controls">
-            <g:textField name="username" value="${username}"
+            <input type="text" name="username" ${focus ? 'autofocus=""' : ''}
                          placeholder="${message(code:'resetPassword.username.placeholder', default:'')}"/>
         </div>
     </div>
+    <g:set var="focus" value="${false}"/>
 </g:if>
 
 <g:if test="${fields.contains('email')}">
@@ -20,9 +23,11 @@
         </label>
 
         <div class="controls">
-            <g:textField name="email" value="${email}" placeholder="${message(code:'resetPassword.email.placeholder', default:'')}"/>
+            <input type="text" name="email" value="${email}" ${focus ? 'autofocus=""' : ''}
+                         placeholder="${message(code:'resetPassword.email.placeholder', default:'')}"/>
         </div>
     </div>
+    <g:set var="focus" value="${false}"/>
 </g:if>
 
 <g:if test="${fields.contains('postalCode')}">

@@ -21,9 +21,8 @@
             <label class="control-label">
                 ${message(code: q, default: q)}
             </label>
-
             <div class="controls">
-                <g:textField name="${q}" value="${answers[q]}"
+                <input type="text" name="${q}" value="${answers[q]?.encodeAsHTML()}" ${i ? '' : 'autofocus=""'}
                              placeholder="${message(code: q + '.placeholder', default:'')}"/>
             </div>
         </div>
