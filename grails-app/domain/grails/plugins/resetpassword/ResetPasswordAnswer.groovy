@@ -20,12 +20,12 @@ class ResetPasswordAnswer {
 
     String username
     int orderIndex
-    int question
+    String question
     String answer
 
     static constraints = {
         username(maxSize:80, blank:false)
-        question(unique:'username')
+        question(maxSize:80, unique:'username')
         answer(maxSize:255, blank:false)
     }
     static mapping = {

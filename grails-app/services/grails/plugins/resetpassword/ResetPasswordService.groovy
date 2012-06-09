@@ -32,14 +32,14 @@ class ResetPasswordService {
     }
 
     List getQuestionsForUser(String username) {
-        def available = getAvailableQuestions()
-        def result = ResetPasswordAnswer.findAllByUsername(username)
-        def questions = result.collect {available[it.question]}
+        def questions = ResetPasswordAnswer.createCriteria().list() {
+            projections {
+                property('question')
+            }
+            eq('username', username)
+            order 'orderIndex', 'asc'
+        }
         resetPasswordDelegate.getQuestions(username, questions)
-    }
-
-    int getQuestionNumber(String questionKey) {
-        getAvailableQuestions().indexOf(questionKey)
     }
 
     /**
@@ -62,7 +62,7 @@ class ResetPasswordService {
      * @param questionKey i18n key for the question
      * @param answer the answer to store
      */
-    void addAnswer(String username, String questionKey, String answer) {
+    void addAnswer(String username, String question, String answer) {
         if (!username) {
             throw new IllegalArgumentException("empty username is not allowed")
         }
@@ -71,9 +71,8 @@ class ResetPasswordService {
         if (!answer) {
             throw new IllegalArgumentException("empty answer is not allowed")
         }
-        def question = getQuestionNumber(questionKey)
-        if (question == -1) {
-            throw new IllegalArgumentException("question [$questionKey] is not a valid security question")
+        if (!getAvailableQuestions().contains(question)) {
+            throw new IllegalArgumentException("question [$question] is not a valid security question")
         }
         def hashedAnswer = toHex(hash(answer.getBytes("UTF-8"), username.getBytes("UTF-8")))
         def usa = ResetPasswordAnswer.findByUsernameAndQuestion(username, question)
@@ -104,11 +103,11 @@ class ResetPasswordService {
      * Note: White space and case are ignored when verifying the answer.
      *
      * @param username the user key (username or email).
-     * @param questionKey i18n key for the question
+     * @param question i18n key for the question
      * @param answer the answer to test
      * @return true if the answer is the same as stored
      */
-    boolean isCorrect(String username, String questionKey, String answer) {
+    boolean isCorrect(String username, String question, String answer) {
         if (!username) {
             throw new IllegalArgumentException("empty username is not allowed")
         }
@@ -116,14 +115,13 @@ class ResetPasswordService {
         if (!answer) {
             throw new IllegalArgumentException("empty answer is not allowed")
         }
-        def question = getQuestionNumber(questionKey)
-        if (question == -1) {
-            throw new IllegalArgumentException("question [$questionKey] is not a valid security question")
+        if (!getAvailableQuestions().contains(question)) {
+            throw new IllegalArgumentException("question [$question] is not a valid security question")
         }
         def hashedAnswer = toHex(hash(answer.getBytes("UTF-8"), username.getBytes("UTF-8")))
         def usa = ResetPasswordAnswer.findByUsernameAndQuestion(username, question)
         if (!usa) {
-            throw new IllegalArgumentException("User [$username] has no answer for for question [$questionKey]")
+            throw new IllegalArgumentException("User [$username] has no answer for for question [$question]")
         }
         return hashedAnswer == usa.answer
     }
