@@ -104,4 +104,16 @@ class ResetPasswordServiceSpec extends grails.plugin.spock.IntegrationSpec {
         thrown(IllegalArgumentException)
     }
 
+    def "verifyAnswers with no questions defined should return truth"() {
+        given:
+        resetPasswordService.addAnswer("anna", "security.question.birth.city", "Oslo")
+
+        when:
+        def answers = ['security.question.birth.city': "Oslo",
+                'security.question.family.wedding.honeymoon.city': "Paris",
+                'security.question.family.child.oldest.name.middle': "Tone"
+        ]
+        then:
+        resetPasswordService.verifyAnswers("laura", answers) // Laura has no questions defined.
+    }
 }

@@ -138,6 +138,13 @@ class ResetPasswordService {
         (new Random(System.currentTimeMillis()).nextInt(800000) + 123456).toString()
     }
 
+    /**
+     * Verify that all questions defined for a user are answered correct.
+     * Note: If no questions are defined, this method still returns the username.
+     * @param username username of use answering questions
+     * @param answers answers keyed by question i18n key
+     * @return username if questions answered correct, null otherwise.
+     */
     def verifyAnswers(String username, Map answers) {
         int correct = 0
         def questions = getQuestionsForUser(username)
@@ -146,7 +153,7 @@ class ResetPasswordService {
                 correct++
             }
         }
-        return correct > 0 && correct == questions.size() ? username : null
+        return correct == questions.size() ? username : null
     }
 
     def changePassword(String username, String password) {
