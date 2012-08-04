@@ -11,10 +11,11 @@ grails.project.dependency.resolution = {
     }
     plugins {
         build(":tomcat:$grailsVersion",
-                ":release:2.0.2") {
+                ":release:2.0.3") {
             export = false
         }
-        test(":spock:latest.integration") {
+        runtime ":platform-core:1.0.M2-SNAPSHOT"
+        test(":spock:0.6") {
             export = false
         }
         test ":greenmail:latest.integration"

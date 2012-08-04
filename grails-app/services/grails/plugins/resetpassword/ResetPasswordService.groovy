@@ -24,7 +24,6 @@ import java.security.MessageDigest
 class ResetPasswordService {
 
     def grailsApplication
-    def asyncEventPublisher
     def resetPasswordDelegate
 
     List getAvailableQuestions() {
@@ -157,9 +156,7 @@ class ResetPasswordService {
     }
 
     def changePassword(String username, String password) {
-        if (asyncEventPublisher) {
-            asyncEventPublisher.publishEvent(new ResetPasswordEvent([username: username, password: password]))
-        }
+        event(for:"app", topic:"resetPassword", data:[username: username, password: password])
         resetPasswordDelegate.resetPassword(username, password)
     }
 
