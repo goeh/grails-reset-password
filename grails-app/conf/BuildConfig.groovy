@@ -5,23 +5,21 @@ grails.project.target.level = 1.6
 
 grails.project.dependency.resolution = {
     inherits("global") // inherit Grails' default dependencies
-    log "warn" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
+    log "warn"
     repositories {
         grailsCentral()
     }
     plugins {
         build(":tomcat:$grailsVersion",
-                ":release:2.0.3") {
+              ":hibernate:$grailsVersion",
+              ":release:2.0.4") {
             export = false
         }
-        runtime ":platform-core:1.0.M2-SNAPSHOT"
+        runtime(":platform-core:1.0.M6") { excludes 'resources' }
         test(":spock:0.6") {
             export = false
         }
-        test ":greenmail:latest.integration"
-        runtime(":hibernate:$grailsVersion") {
-            export = false
-        }
+        test(":greenmail:latest.integration") { export = false }
         runtime ":mail:1.0"
     }
 }

@@ -16,7 +16,7 @@
 
 class ResetPasswordGrailsPlugin {
     // the plugin version
-    def version = "0.7.0"
+    def version = "0.8.0"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.0 > *"
     // the other plugins this plugin depends on
@@ -40,4 +40,13 @@ or set any temporary passwords.
     def organization = [ name: "Technipelago AB", url: "http://www.technipelago.se/" ]
     def issueManagement = [ system: "github", url: "https://github.com/goeh/grails-reset-password/issues" ]
     def scm = [ url: "https://github.com/goeh/grails-reset-password" ]
+
+    def features = {
+        password {
+            description "Reset Password"
+            link controller: 'resetPassword'
+            enabled true
+            hidden true
+        }
+    }
 }
