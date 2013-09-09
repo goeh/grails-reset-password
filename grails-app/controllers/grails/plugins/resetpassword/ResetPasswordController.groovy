@@ -34,7 +34,7 @@ class ResetPasswordController {
             redirect(action: "unauthorized")
             return
         }
-        def fields = grailsApplication.config.reset.password.step1.fields ?: ['email', 'postalCode']
+        def fields = grailsApplication.config.reset.password.step1.fields ?: ['username']
         switch (request.method) {
             case "GET":
                 break
@@ -42,10 +42,10 @@ class ResetPasswordController {
                 try {
                     def user = resetPasswordService.verifyAccount(params)
                     if (user) {
-                        httpSession.resetPasswordUser = user
+                        httpSession.resetPasswordUser = user.username
                         httpSession.resetPasswordStep1 = true
                         if (grailsApplication.config.reset.password.email.enabled) {
-                            httpSession.resetPasswordCode = sendSecurityCode(params.email)
+                            httpSession.resetPasswordCode = sendSecurityCode(user.email, request.locale)
                         }
                         redirect(action: "step2")
                         return
@@ -90,7 +90,7 @@ class ResetPasswordController {
             return
         }
 
-        def answers = params.findAll {it.key.startsWith('security.question')}
+        def answers = params.findAll { it.key.startsWith('security.question') }
 
         switch (request.method) {
             case "GET":
@@ -175,28 +175,9 @@ class ResetPasswordController {
         resetSession()
     }
 
-    private String sendSecurityCode(String email) {
-        def config = grailsApplication.config.reset.password.email
-        def subject = message(code: "security.question.email.subject", default: "Password Reset Security Code")
-        def text = message(code: "security.question.email.body", default: "Security code:")
+    private String sendSecurityCode(final String email, final Locale locale) {
         def code = resetPasswordService.getSecurityCode()
-        sendMail {
-            multipart true
-            to email
-            if (config.sender) {
-                from config.sender
-            }
-            if (config.cc) {
-                cc config.cc
-            }
-            if (config.bcc) {
-                bcc config.bcc
-            }
-            delegate.subject subject
-            delegate.text "$text\n\n$code\n".toString()
-            html(view: "email", model: [code: code, email: email, layout: (config.layout ?: 'email')])
-        }
-        return code
+        event(for: "resetPassword", topic: "sendSecurityCode", data: [email: email, code: code, locale: locale], fork: false)?.value
     }
 
     private void resetSession() {
