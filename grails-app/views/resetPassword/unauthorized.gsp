@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="main"/>
+    <meta name="layout" content="${grailsApplication.config.reset.password.layout ?: 'main'}"/>
     <title><g:message code="resetPassword.unauthorized.title"/></title>
 </head>
 
