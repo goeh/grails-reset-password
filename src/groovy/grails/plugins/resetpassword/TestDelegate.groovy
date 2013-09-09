@@ -22,7 +22,7 @@ package grails.plugins.resetpassword
 class TestDelegate {
 
     def verifyAccount(Map params) {
-        return params.postalCode == '12345' ? (params.username ?: params.email) : null
+        return params.postalCode == '12345' ? [username: params.username, email: params.email] : null
     }
 
     def getQuestions(username, questions) {
