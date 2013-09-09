@@ -1,25 +1,26 @@
-grails.project.class.dir = "target/classes"
-grails.project.test.class.dir = "target/test-classes"
-grails.project.test.reports.dir = "target/test-reports"
+grails.project.work.dir = "target"
 grails.project.target.level = 1.6
 
 grails.project.dependency.resolution = {
     inherits("global") // inherit Grails' default dependencies
     log "warn"
+    legacyResolve false
     repositories {
         grailsCentral()
+    }
+    dependencies {
+        test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
     }
     plugins {
         build(":tomcat:$grailsVersion",
               ":hibernate:$grailsVersion",
-              ":release:2.0.4") {
+              ":release:2.2.1") {
             export = false
         }
-        runtime(":platform-core:1.0.M6") { excludes 'resources' }
-        test(":spock:0.6") {
+        runtime(":platform-core:1.0.RC5") { excludes 'resources' }
+        test(":spock:0.7") {
             export = false
+            exclude "spock-grails-support"
         }
-        test(":greenmail:latest.integration") { export = false }
-        runtime ":mail:1.0"
     }
 }
