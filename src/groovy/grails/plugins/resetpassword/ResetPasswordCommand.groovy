@@ -33,18 +33,22 @@ class ResetPasswordCommand {
     def passwordValidatorService
 
     static constraints = {
-        username(maxSize: 80, nullable:false, blank: false)
-        password1(maxSize: 80, nullable: false, blank: false, validator: { val, obj, errors->
-            def result = obj.passwordValidatorService.validatePassword(val, obj.username, obj.locale)
-            for(code in result) {
-                errors.rejectValue('password', code)
+        username(maxSize: 80, nullable: false, blank: false)
+        password1(maxSize: 255, nullable: false, blank: false, validator: { val, obj, errors ->
+            try {
+                def result = obj.passwordValidatorService.validatePassword(val, obj.username, obj.locale)
+                for (code in result) {
+                    errors.rejectValue('password1', code)
+                }
+            } catch (Exception e) {
+                errors.rejectValue('password1', e.message)
             }
             return null
         })
-        password2(maxSize: 255, blank: false, validator: { val, obj->
+        password2(maxSize: 255, blank: false, validator: { val, obj ->
             val == obj.password1 ? null : 'resetPassword.error.password.mismatch'
         })
-        locale(nullable:true)
+        locale(nullable: true)
     }
 
     @Override

@@ -22,6 +22,7 @@ class ResetPasswordController {
 
     def grailsApplication
     def resetPasswordService
+    def passwordValidatorService
 
     def index() {
         redirect(action: "step1")
@@ -121,21 +122,23 @@ class ResetPasswordController {
      * Security questions answered correct. Allow user to set new password.
      * @return
      */
-    def step3(ResetPasswordCommand cmd) {
+    def step3() {
         def httpSession = request.session
         if (!(httpSession.resetPasswordStep1 && httpSession.resetPasswordStep2)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN)
             return
         }
 
-        cmd.username = httpSession.resetPasswordUser
+        def cmd = new ResetPasswordCommand(locale: request.locale,
+                passwordValidatorService: passwordValidatorService,
+                username: httpSession.resetPasswordUser)
 
         switch (request.method) {
             case "GET":
-                cmd.clearErrors()
                 return [cmd: cmd]
             case "POST":
-                if (cmd.hasErrors()) {
+                bindData(cmd, params, [include: ['password1', 'password2']])
+                if (!cmd.validate()) {
                     render view: 'step3', model: [cmd: cmd]
                     return
                 }

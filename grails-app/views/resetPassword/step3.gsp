@@ -14,6 +14,17 @@
 
 <g:render template="flash"/>
 
+<g:hasErrors bean="${cmd}">
+    <div class="alert alert-error">
+        <ul>
+            <g:eachError bean="${cmd}" var="error">
+                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message
+                        error="${error}"/></li>
+            </g:eachError>
+        </ul>
+    </div>
+</g:hasErrors>
+
 <g:form action="step3">
 
     <div class="control-group">
