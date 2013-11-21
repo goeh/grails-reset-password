@@ -15,13 +15,9 @@
  */
 
 class ResetPasswordGrailsPlugin {
-    // the plugin version
-    def version = "0.8.0"
-    // the version or versions of Grails the plugin is designed for
+    def version = "0.9.0"
     def grailsVersion = "2.0 > *"
-    // the other plugins this plugin depends on
     def dependsOn = [:]
-    // resources that are excluded from plugin packaging
     def pluginExcludes = [
         "grails-app/views/error.gsp",
         "src/groovy/grails/plugins/resetpassword/TestDelegate.groovy"
