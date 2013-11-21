@@ -55,7 +55,7 @@ class ResetPasswordController {
                         httpSession.resetPasswordStep1Retries = (httpSession.resetPasswordStep1Retries ?: 0) + 1
                     }
                 } catch (Exception e) {
-                    log.error(e)
+                    log.error("Password reset step 1 failed $params", e)
                     flash.error = message(code: 'resetPassword.error.server', default: 'Server error')
                 }
                 break
@@ -110,7 +110,7 @@ class ResetPasswordController {
                         return [questions: questions, answers: answers]
                     }
                 } catch (Exception e) {
-                    log.error(e)
+                    log.error("Password reset step 2 failed $params", e)
                     flash.error = message(code: 'resetPassword.error.server', default: 'Server error')
                 }
                 break
@@ -121,32 +121,35 @@ class ResetPasswordController {
      * Security questions answered correct. Allow user to set new password.
      * @return
      */
-    def step3() {
+    def step3(ResetPasswordCommand cmd) {
         def httpSession = request.session
         if (!(httpSession.resetPasswordStep1 && httpSession.resetPasswordStep2)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN)
             return
         }
+
+        cmd.username = httpSession.resetPasswordUser
+
         switch (request.method) {
             case "GET":
-                break
+                cmd.clearErrors()
+                return [cmd: cmd]
             case "POST":
+                if (cmd.hasErrors()) {
+                    render view: 'step3', model: [cmd: cmd]
+                    return
+                }
                 try {
-                    if (params.password1 == params.password2) {
-                        def username = httpSession.resetPasswordUser
-                        def user = resetPasswordService.changePassword(username, params.password1)
-                        if (user) {
-                            httpSession.resetPasswordStep3 = true
-                            redirect(action: "success")
-                        } else {
-                            httpSession.resetPasswordStep3 = false
-                            redirect(action: "unsupported")
-                        }
+                    def user = resetPasswordService.changePassword(cmd.username, cmd.password1)
+                    if (user) {
+                        httpSession.resetPasswordStep3 = true
+                        redirect(action: "success")
                     } else {
-                        flash.error = message(code: 'resetPassword.error.password.mismatch')
+                        httpSession.resetPasswordStep3 = false
+                        redirect(action: "unsupported")
                     }
                 } catch (Exception e) {
-                    log.error(e)
+                    log.error("Password reset step 3 failed $params", e)
                     flash.error = message(code: 'resetPassword.error.server', default: 'Server error')
                 }
                 break
