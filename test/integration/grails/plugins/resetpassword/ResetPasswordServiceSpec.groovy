@@ -116,4 +116,30 @@ class ResetPasswordServiceSpec extends grails.plugin.spock.IntegrationSpec {
         then:
         resetPasswordService.verifyAnswers("laura", answers) // Laura has no questions defined.
     }
+
+    def "remove question"() {
+        given:
+        def username = "test"
+
+        when:
+        resetPasswordService.addAnswer(username, "security.question.birth.city", "New York")
+        resetPasswordService.addAnswer(username, "security.question.family.wedding.honeymoon.city", "Venice")
+        resetPasswordService.addAnswer(username, "security.question.family.child.oldest.name.middle", "Adam")
+
+        then:
+        resetPasswordService.getQuestionsForUser(username).size() == 3
+
+        when: "remove a question"
+        resetPasswordService.removeAnswer(username, "security.question.family.wedding.honeymoon.city")
+
+        then: "only two left"
+        resetPasswordService.getQuestionsForUser(username).size() == 2
+
+
+        when: "remove non-existing question"
+        resetPasswordService.removeAnswer(username, "security.question.foo.bogus")
+
+        then: "nothing happens"
+        resetPasswordService.getQuestionsForUser(username).size() == 2
+    }
 }
