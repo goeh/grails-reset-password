@@ -15,7 +15,7 @@
  */
 
 class ResetPasswordGrailsPlugin {
-    def version = "0.9.0"
+    def version = "0.9.1"
     def grailsVersion = "2.0 > *"
     def dependsOn = [:]
     def pluginExcludes = [
@@ -26,10 +26,11 @@ class ResetPasswordGrailsPlugin {
     def author = "Goran Ehrsson"
     def authorEmail = "goran@technipelago.se"
     def description = '''
-A secure forgot password feature that uses personal security questions.
+A secure "forgot password" feature that uses personal security questions.
 The user is allowed to reset his/her own password by answering a series of
 questions. The web application doesn’t need to use email, display passwords,
-or set any temporary passwords.
+or set any temporary passwords. It's flexible and can be customized for
+different requirements using application event listeners.
 '''
     def documentation = "https://github.com/goeh/grails-reset-password"
     def license = "APACHE"
@@ -37,6 +38,9 @@ or set any temporary passwords.
     def issueManagement = [ system: "github", url: "https://github.com/goeh/grails-reset-password/issues" ]
     def scm = [ url: "https://github.com/goeh/grails-reset-password" ]
 
+    /**
+     * This feature declaration enables the "reset my password" feature in GR8 CRM.
+     */
     def features = {
         password {
             description "Reset Password"
