@@ -86,11 +86,7 @@ class ResetPasswordService {
         if (!username) {
             throw new IllegalArgumentException("empty username is not allowed")
         }
-        def question = getQuestionNumber(questionKey)
-        if (question == -1) {
-            throw new IllegalArgumentException("question [$questionKey] is not a valid security question")
-        }
-        ResetPasswordAnswer.findByUsernameAndQuestion(username, question)?.delete()
+        ResetPasswordAnswer.findByUsernameAndQuestion(username, questionKey)?.delete()
     }
 
     void removeAllAnswers(String username) {
