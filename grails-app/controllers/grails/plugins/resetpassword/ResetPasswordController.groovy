@@ -183,7 +183,7 @@ class ResetPasswordController {
 
     private String sendSecurityCode(final String email, final Locale locale) {
         def code = resetPasswordService.getSecurityCode()
-        event(for: "resetPassword", topic: "sendSecurityCode", data: [email: email, code: code, locale: locale], fork: false)?.value
+        event(for: "resetPassword", topic: "sendSecurityCode", data: [email: email, code: code, locale: locale, cookies: request.getCookies()], fork: false)?.value
     }
 
     private void resetSession() {
