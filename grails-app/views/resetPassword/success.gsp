@@ -16,13 +16,6 @@
 
 <p><g:message code="resetPassword.success.message"/></p>
 
-<div class="form-actions">
-    <a href="${url}" class="btn btn-primary">
-        <i class="icon-ok icon-white"></i>
-        <g:message code="resetPassword.button.login.label" default="Proceed to login"/>
-    </a>
-</div>
-
 </body>
 
 </html>
