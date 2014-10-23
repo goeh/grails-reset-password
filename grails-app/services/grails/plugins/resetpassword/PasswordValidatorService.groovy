@@ -181,7 +181,24 @@ class PasswordValidatorService {
         def resolver = getMessageResolver(locale)
         def validator = new PasswordValidator(resolver, getPasswordRules(username != null))
         def result = validator.validate(createPasswordData(username, password))
-
-        return result.valid ? null : validator.getMessages(result)
+        if (result.valid) {
+            return null
+        }
+        // The following lines are workaround for missing i18n support in password validator.
+        // It has decent i18n support but three words are missing ("digit", "non-alphanumeric" and "uppercase")
+        //
+        def translated = validator.getMessages(result)
+        def fixed = []
+        for (txt in translated) {
+            txt = txt.replace('digit', messageSource.getMessage('passwordValidator.digit', null, 'digit', locale))
+            txt = txt.replace('non-alphanumeric', messageSource.getMessage('passwordValidator.non-alphanumeric', null, 'non-alphanumeric', locale))
+            txt = txt.replace('uppercase', messageSource.getMessage('passwordValidator.uppercase', null, 'uppercase', locale))
+            txt = txt.replace('1', messageSource.getMessage('passwordValidator.one', null, '1', locale))
+            txt = txt.replace('2', messageSource.getMessage('passwordValidator.two', null, '2', locale))
+            txt = txt.replace('3', messageSource.getMessage('passwordValidator.three', null, '3', locale))
+            txt = txt.replace('4', messageSource.getMessage('passwordValidator.four', null, '4', locale))
+            fixed << txt
+        }
+        return fixed
     }
 }
