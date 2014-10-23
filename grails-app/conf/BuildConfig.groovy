@@ -1,4 +1,6 @@
-grails.project.work.dir = "target"
+grails.project.class.dir = "target/classes"
+grails.project.test.class.dir = "target/test-classes"
+grails.project.test.reports.dir = "target/test-reports"
 grails.project.target.level = 1.6
 
 grails.project.dependency.resolution = {
@@ -18,7 +20,7 @@ grails.project.dependency.resolution = {
               ":release:2.2.1") {
             export = false
         }
-        runtime(":platform-core:1.0.RC5") { excludes 'resources' } // we use platform-core events.
+        runtime(":platform-core:1.0.0") { excludes 'resources' } // we use platform-core events.
         test(":spock:0.7") {
             export = false
             exclude "spock-grails-support"
