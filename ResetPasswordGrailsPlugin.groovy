@@ -15,8 +15,8 @@
  */
 
 class ResetPasswordGrailsPlugin {
-    def version = "0.9.3"
-    def grailsVersion = "2.0 > *"
+    def version = "0.9.4"
+    def grailsVersion = "2.4 > *"
     def dependsOn = [:]
     def pluginExcludes = [
         "grails-app/views/error.gsp",

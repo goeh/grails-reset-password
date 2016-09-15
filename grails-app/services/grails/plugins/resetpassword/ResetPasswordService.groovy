@@ -30,7 +30,7 @@ class ResetPasswordService {
         grailsApplication.config.reset.password.questions ?: []
     }
 
-    List getQuestionsForUser(String username) {
+    List<String> getQuestionsForUser(String username) {
         def questions = ResetPasswordAnswer.createCriteria().list() {
             projections {
                 property('question')
@@ -121,11 +121,11 @@ class ResetPasswordService {
         return hashedAnswer == usa.answer
     }
 
-    def verifyAccount(Map params) {
+    Map verifyAccount(Map params) {
         resetPasswordDelegate.verifyAccount(params)
     }
 
-    def disableAccount(String username) {
+    boolean disableAccount(String username) {
         resetPasswordDelegate.disableAccount(username)
     }
 
@@ -151,7 +151,7 @@ class ResetPasswordService {
         return correct == questions.size() ? username : null
     }
 
-    def changePassword(String username, String password) {
+    boolean changePassword(String username, String password) {
         event(for:"app", topic:"resetPassword", data:[username: username, password: password])
         resetPasswordDelegate.resetPassword(username, password)
     }

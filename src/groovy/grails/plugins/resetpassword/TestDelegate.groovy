@@ -19,20 +19,25 @@ package grails.plugins.resetpassword
 /**
  * For testing purpose only.
  */
-class TestDelegate {
+class TestDelegate implements ResetPasswordDelegate {
 
-    def verifyAccount(Map params) {
-        return params.postalCode == '12345' ? [username: params.username, email: params.email] : null
+    @Override
+    Map verifyAccount(Map params) {
+        params.postalCode == '12345' ? [username: params.username, email: params.email] : null
     }
 
-    def getQuestions(username, questions) {
-        return questions
+    @Override
+    List<String> getQuestions(String username, List<String> questions) {
+        questions
     }
 
-    def resetPassword(String username, String password) {
-        return username
+    @Override
+    boolean resetPassword(String username, String password) {
+        true
     }
 
-    def disableAccount(String username) {
+    @Override
+    boolean disableAccount(String username) {
+        true
     }
 }

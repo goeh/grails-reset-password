@@ -143,8 +143,8 @@ class ResetPasswordController {
                     return
                 }
                 try {
-                    def user = resetPasswordService.changePassword(cmd.username, cmd.password1)
-                    if (user) {
+                    def changed = resetPasswordService.changePassword(cmd.username, cmd.password1)
+                    if (changed) {
                         httpSession.resetPasswordStep3 = true
                         redirect(action: "success")
                     } else {
