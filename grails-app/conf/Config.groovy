@@ -23,11 +23,8 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-grails.mail.port = com.icegreen.greenmail.util.ServerSetupTest.SMTP.port
-
+reset.password.validate = true
 reset.password.email.enabled = true
-reset.password.email.layout = "email"
-reset.password.email.sender = "root@localhost"
 reset.password.hashAlgorithm = "SHA-256"
 reset.password.hashIterations = 1000
 reset.password.success.url=null

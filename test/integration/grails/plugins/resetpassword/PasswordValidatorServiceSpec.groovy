@@ -1,21 +1,23 @@
 package grails.plugins.resetpassword
 
+import spock.lang.Specification
+
 /**
  * Tests for PasswordValidatorService
  */
-class PasswordValidatorServiceSpec {
+class PasswordValidatorServiceSpec extends Specification {
 
     def passwordValidatorService
 
     def "test password validation"() {
         expect:
         // These passwords should not validate
-        !passwordValidatorService.validatePassword("hello", "hello")
-        !passwordValidatorService.validatePassword("hello world", "hello")
-        !passwordValidatorService.validatePassword("Hello 1 World!", "hello")
-        !passwordValidatorService.validatePassword("Hello 1111 World!", "hello")
+        passwordValidatorService.validatePassword("hello", "hello")
+        passwordValidatorService.validatePassword("hello world", "hello")
+        passwordValidatorService.validatePassword("Hello 1 World!", "hello")
+        passwordValidatorService.validatePassword("Hello 1111 World!", "hello")
 
         // These passwords are ok
-        passwordValidatorService.validatePassword("Hello 1 World!", "bart")
+        !passwordValidatorService.validatePassword("Hello 1 World!", "bart")
     }
 }

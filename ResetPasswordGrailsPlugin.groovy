@@ -15,7 +15,7 @@
  */
 
 class ResetPasswordGrailsPlugin {
-    def version = "0.9.2"
+    def version = "0.9.3"
     def grailsVersion = "2.0 > *"
     def dependsOn = [:]
     def pluginExcludes = [

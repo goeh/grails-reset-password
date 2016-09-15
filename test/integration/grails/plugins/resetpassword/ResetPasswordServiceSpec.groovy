@@ -16,10 +16,12 @@
 
 package grails.plugins.resetpassword
 
+import grails.test.spock.IntegrationSpec
+
 /**
  * Tests for ResetPasswordServiceSpec.
  */
-class ResetPasswordServiceSpec extends grails.plugin.spock.IntegrationSpec {
+class ResetPasswordServiceSpec extends IntegrationSpec {
 
     def grailsApplication
     def resetPasswordService
